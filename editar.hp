@@ -1,0 +1,66 @@
+<?php
+session_start();
+
+$id = $_GET['id'];
+$productoEncontrado = null;
+$mensaje = "";
+
+foreach ($_SESSION['productos'] as $key => $producto) {
+    if ($producto['id'] == $id) {
+        $productoEncontrado = $producto;
+        $index = $key;
+        break;
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = trim($_POST["nombre"]);
+    $descripcion = trim($_POST["descripcion"]);
+    $precio = trim($_POST["precio"]);
+    $stock = trim($_POST["stock"]);
+    $categoria = trim($_POST["categoria"]);
+
+    if (empty($nombre) || empty($descripcion) || empty($precio) || empty($stock) || empty($categoria)) {
+        $mensaje = "Todos los campos son obligatorios.";
+    } elseif (!is_numeric($precio) || !is_numeric($stock)) {
+        $mensaje = "Precio y Stock deben ser numéricos.";
+    } elseif ($precio < 0 || $stock < 0) {
+        $mensaje = "No se permiten valores negativos.";
+    } else {
+        $_SESSION['productos'][$index] = [
+            "id" => $id,
+            "nombre" => $nombre,
+            "descripcion" => $descripcion,
+            "precio" => $precio,
+            "stock" => $stock,
+            "categoria" => $categoria
+        ];
+        header("Location: productos.php");
+        exit();
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Producto</title>
+</head>
+<body>
+
+<h2>Editar Producto</h2>
+
+<p style="color:red;"><?php echo $mensaje; ?></p>
+
+<form method="POST">
+    ID: <input type="text" value="<?php echo $productoEncontrado['id']; ?>" disabled><br><br>
+    Nombre: <input type="text" name="nombre" value="<?php echo $productoEncontrado['nombre']; ?>"><br><br>
+    Descripción: <input type="text" name="descripcion" value="<?php echo $productoEncontrado['descripcion']; ?>"><br><br>
+    Precio: <input type="text" name="precio" value="<?php echo $productoEncontrado['precio']; ?>"><br><br>
+    Stock: <input type="text" name="stock" value="<?php echo $productoEncontrado['stock']; ?>"><br><br>
+    Categoría: <input type="text" name="categoria" value="<?php echo $productoEncontrado['categoria']; ?>"><br><br>
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+</body>
+</html>
