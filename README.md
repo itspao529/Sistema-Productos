@@ -25,7 +25,7 @@ Kevin Jiménez
 
 ## 📄 Investigación Aplicada 1
 
-📥 [Descargar PDF](Investigacion_Aplicada_DSS.pdf)
+📥 [Descargar PDF](Investigación_Aplicada_DSS.pdf)
 
 ---
 
